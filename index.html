@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:ital@1&family=Montserrat:ital@1&family=Roboto+Condensed:ital@1&family=Roboto:ital@1&display=swap"
+      rel="stylesheet"
+    />
+    <title>Snake, Water and Gun</title>
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        background-image: url('https://storage.googleapis.com/replit/images/1661929228821_1412b8df1c94fcfeb9a61da0356b3979.png');
+        background-size: 100vw;
+        text-align: center;
+      }
+
+      .gameHead {
+        color: orangered;
+      }
+
+      .layout {
+        padding: 1em 0;
+      }
+
+      .usergrid {
+        grid-area: usergrid;
+        color: aliceblue;
+      }
+      .compgrid {
+        grid-area: compgrid;
+        color: aliceblue;
+      }
+      .inputgrid {
+        grid-area: inputgrid;
+      }
+      .scoregrid {
+        grid-area: scoregrid;
+        color: aliceblue;
+      }
+      .gamegrid {
+        display: grid;
+        gap: 10%;
+        grid-template-areas:
+          "usergrid compgrid"
+          "inputgrid inputgrid"
+          "scoregrid scoregrid";
+      }
+
+      .text-input {
+        position: relative;
+      }
+      input {
+        text-align: center;
+        border-width: thick;
+        border-color: darkmagenta;
+        border-radius: 2em;
+        color: darkmagenta;
+        margin: 1em;
+        padding: 0.5em;
+        height: 2em;
+        width: 15em;
+        font-weight: 900;
+      }
+
+      button {
+        width: 9em;
+        height: 2.5em;
+        border-radius: 0.5em;
+        padding: 0.5em;
+        font-weight: bold;
+        color: #ccf381;
+        background-color: #4831d4;
+        cursor: pointer;
+      }
+      button:hover {
+        color: #4831d4;
+        background-color: #ccf381;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="gameHead">
+      <h1>Snake, Water, Gun</h1>
+      <p>Choose between S(for Snake), W(for Water) and G(for Gun)</p>
+    </div>
+    <!-- Game layout -->
+    <div class="gamegrid">
+      <!-- User's layout -->
+      <div class="usergrid layout">
+        <h3>(S) | (W) | (G)</h3>
+        <p id="uChoose">Your choice from S, W, G</p>
+        <h4>Your Score</h4>
+        <p>Score: <em id="scoreOfUser">0</em></p>
+      </div>
+
+      <!-- Input layout -->
+      <div class="inputgrid button">
+        <div class="text-input">
+          <input
+            type="text"
+            name="userchar"
+            id="userinput"
+            placeholder="S, W, or G"
+          />
+        </div>
+        <div class="btn">
+          <button type="button" onclick="initialise()">Play Game</button>
+        </div>
+      </div>
+
+      <!-- Computer's layout -->
+      <div class="compgrid layout">
+        <h3>(S) | (W) | (G)</h3>
+        <p id="cChoose">Computer's Choice from S, W, G</p>
+        <h4>Computer's Score</h4>
+        <p>Score: <em id="scoreOfComputer">0</em></p>
+      </div>
+
+      <!-- Scoreboard layout -->
+      <div class="scoregrid layout">
+        <h3>Final Score</h3>
+        <p id="fResult">
+          Final score of user and computer and winner decider with both scores
+        </p>
+        <p id="fScore"></p>
+      </div>
+    </div>
+  </body>
+  <script>
+    // First create a random string from the input string swg and compare if it matches the string of the user after user clicks the button then show the score of user and computer in their respective grid
+    let uScore = 0,
+      cScore = 0,
+      chances = 5;
+
+    function initialise() {
+      const string = ["s", "S", "w", "W", "g", "G"];
+      let userOption = document.getElementById("userinput").value;
+
+      let value = string.filter((char) => char === userOption);
+
+      if (userOption !== "" && value[0] !== undefined) {
+        const compString = "swg";
+        let compOption = compString.charAt(
+          Math.floor(Math.random() * compString.length)
+        );
+
+        let initials = {
+          uo: userOption,
+          co: compOption,
+        };
+
+        startgame(initials);
+      } else {
+        alert("Please enter your choice");
+      }
+    }
+
+    function displayScore(initials) {
+      document.getElementById("scoreOfComputer").innerHTML = cScore;
+      document.getElementById("scoreOfUser").innerHTML = uScore;
+      document.getElementById(
+        "uChoose"
+      ).innerHTML = `User chose ${initials.uo}`;
+      document.getElementById(
+        "cChoose"
+      ).innerHTML = `Computer chose ${initials.co}`;
+    }
+
+    function finalScore() {
+      document.getElementById(
+        "fResult"
+      ).innerHTML = `User's score: ${uScore}, Computer's score: ${uScore}`;
+      if (uScore == cScore) {
+        document.getElementById(
+          "fScore"
+        ).innerHTML = `You tied with the computer with score: ${uScore}`;
+      } else {
+        if (uScore > cScore) {
+          document.getElementById(
+            "fScore"
+          ).innerHTML = `You defeated the computer with score: ${uScore}`;
+        } else {
+          document.getElementById(
+            "fScore"
+          ).innerHTML = `Computer defeated you with score: ${cScore}`;
+        }
+      }
+    }
+
+    function startgame(initials) {
+      if (initials.uo !== initials.co) {
+        if (initials.uo === "s") {
+          if (initials.co === "w") {
+            uScore += 1;
+            displayScore(initials);
+          } else {
+            cScore += 1;
+            displayScore(initials);
+          }
+        } else if (initials.uo === "w") {
+          if (initials.co === "g") {
+            uScore += 1;
+            displayScore(initials);
+          } else {
+            cScore += 1;
+            displayScore(initials);
+          }
+        } else {
+          if (initials.co === "s") {
+            uScore += 1;
+            displayScore(initials);
+          } else {
+            cScore += 1;
+            displayScore(initials);
+          }
+        }
+      } else {
+        displayScore(initials);
+      }
+
+      chances -= 1;
+
+      if (chances == 0) {
+        finalScore();
+      }
+    }
+  </script>
+</html>
